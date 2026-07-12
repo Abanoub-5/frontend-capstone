@@ -1,6 +1,10 @@
 # Frontend Capstone
 
-This repository contains my frontend capstone project.
+This repository contains my frontend capstone project demonstrating AI-assisted development practices with modern frontend technologies.
+
+## Project Overview
+
+A responsive frontend application showcasing modern HTML/CSS/JavaScript techniques, built with AI-assisted development practices. Demonstrates semantic HTML, organized CSS architecture, and vanilla JavaScript patterns suitable for portfolio demonstration.
 
 ## Tech Stack
 
