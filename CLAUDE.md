@@ -1,23 +1,14 @@
-
-## CLAUDE.md
-
-Example
-
-```markdown
 # Project Rules
 
-## Stack
+1. Always reuse Button and Input components from src/components.
 
-- HTML
-- CSS
-- JavaScript
+2. Never add new UI libraries without approval.
 
-## Style
+3. Every form requires:
+   - accessible labels
+   - aria-invalid
+   - inline validation
 
-- Use semantic HTML
-- Keep CSS organized
-- Use meaningful commit messages
+4. Write tests for all new form validation.
 
-## Git
-
-Follow Conventional Commits.
+5. Run npm test before finishing any task.
