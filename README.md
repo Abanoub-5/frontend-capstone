@@ -1,29 +1,32 @@
-# Frontend Capstone
+# React + TypeScript + Vite
 
-This repository contains my frontend capstone project demonstrating AI-assisted development practices with modern frontend technologies.
+This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
-## Project Overview
+Currently, two official plugins are available:
 
-A responsive frontend application showcasing modern HTML/CSS/JavaScript techniques, built with AI-assisted development practices. Demonstrates semantic HTML, organized CSS architecture, and vanilla JavaScript patterns suitable for portfolio demonstration.
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## Tech Stack
+## React Compiler
 
-- HTML
-- CSS
-- JavaScript
-- Node.js
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-## Goals
+## Expanding the Oxlint configuration
 
-- Learn AI-assisted development
-- Practice Git and GitHub
-- Build frontend applications
+If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
 
-## Getting Started
-
-1. Clone the repository
-
-```bash
-git clone https://github.com/YOUR_USERNAME/frontend-capstone.git
-cd frontend-capstone
+```json
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["react", "typescript", "oxc"],
+  "options": {
+    "typeAware": true
+  },
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/only-export-components": ["warn", { "allowConstantExport": true }]
+  }
+}
 ```
+
+See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
