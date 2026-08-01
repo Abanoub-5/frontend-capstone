@@ -99,15 +99,17 @@
  * ------------------------------------------------------------------------- */
 
 :root {
-  --cp-text: #44403c;
-  --cp-text-strong: #1c1917;
-  --cp-bg: #fffaf3;
-  --cp-border: #e7e0d5;
-  --cp-code-bg: #f5f0e6;
-  --cp-accent: #b45309;
-  --cp-accent-bg: rgba(180, 83, 9, 0.1);
+  --cp-text: #334155;
+  --cp-text-strong: #0f172a;
+  --cp-bg: #f8fafc;
+  --cp-surface: #ffffff;
+  --cp-border: #e2e8f0;
+  --cp-code-bg: #f1f5f9;
+  --cp-accent: #4f46e5;
+  --cp-accent-contrast: #ffffff;
+  --cp-accent-bg: rgba(79, 70, 229, 0.1);
   --cp-shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+    rgba(15, 23, 42, 0.1) 0 10px 15px -3px, rgba(15, 23, 42, 0.05) 0 4px 6px -2px;
 
   --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
@@ -121,13 +123,15 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --cp-text: #d6d3d1;
-    --cp-text-strong: #f5f5f4;
-    --cp-bg: #1c1917;
-    --cp-border: #3b3631;
-    --cp-code-bg: #292524;
-    --cp-accent: #fbbf24;
-    --cp-accent-bg: rgba(251, 191, 36, 0.12);
+    --cp-text: #cbd5e1;
+    --cp-text-strong: #f1f5f9;
+    --cp-bg: #0f172a;
+    --cp-surface: #16213a;
+    --cp-border: #1e293b;
+    --cp-code-bg: #1e293b;
+    --cp-accent: #818cf8;
+    --cp-accent-contrast: #0f172a;
+    --cp-accent-bg: rgba(129, 140, 248, 0.15);
     --cp-shadow:
       rgba(0, 0, 0, 0.5) 0 10px 15px -3px, rgba(0, 0, 0, 0.3) 0 4px 6px -2px;
   }
@@ -135,6 +139,10 @@
 
 body {
   margin: 0;
+  /* Unlayered rule: overrides the shadcn base layer so light/dark follow the
+     same prefers-color-scheme toggle as the custom components. */
+  background: var(--cp-bg);
+  color: var(--cp-text);
 }
 
 #root {
@@ -174,7 +182,7 @@ h3 {
   padding: 1.25rem;
   border: 1px solid var(--cp-border);
   border-radius: 0.75rem;
-  background: var(--cp-bg);
+  background: var(--cp-surface);
 }
 
 code,
@@ -218,7 +226,7 @@ ul {
   border: 1px solid transparent;
   border-radius: 0.5rem;
   background: var(--cp-accent);
-  color: #fff;
+  color: var(--cp-accent-contrast);
   font: inherit;
   font-weight: 600;
   cursor: pointer;

@@ -23,7 +23,7 @@
   padding: 1.5rem;
   border: 1px solid var(--cp-border);
   border-radius: 0.75rem;
-  background: var(--cp-bg);
+  background: var(--cp-surface);
   color: var(--cp-text);
   box-shadow: var(--cp-shadow);
   animation: dialog-pop-in 150ms ease-out;
