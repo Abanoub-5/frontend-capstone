@@ -1,0 +1,40 @@
+.disclosure {
+  width: 100%;
+  border: 1px solid var(--cp-border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.disclosure-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: none;
+  background: var(--cp-code-bg);
+  color: var(--cp-text-strong);
+  font: inherit;
+  font-weight: 600;
+  text-align: left;
+  cursor: pointer;
+}
+
+.disclosure-button:hover {
+  background: var(--cp-accent-bg);
+}
+
+.disclosure-button:focus-visible {
+  outline: 3px solid var(--cp-accent);
+  outline-offset: -3px;
+}
+
+.disclosure-chevron {
+  font-size: 0.8rem;
+  color: var(--cp-accent);
+}
+
+.disclosure-content {
+  padding: 1rem;
+  color: var(--cp-text);
+}
