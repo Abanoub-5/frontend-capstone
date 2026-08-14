@@ -27,3 +27,19 @@ A responsive frontend application showcasing modern HTML/CSS/JavaScript techniqu
 git clone https://github.com/YOUR_USERNAME/frontend-capstone.git
 cd frontend-capstone
 ```
+## AI Lead Scoring Tool
+
+This project includes a server-side `scoreLead` tool powered by the AI SDK and validated with Zod.
+
+### Tool Contract
+
+**Name:** `scoreLead`
+
+**Purpose:** Scores a sales lead based on company size, budget, and engagement.
+
+### Input Schema
+
+```text
+companySize: number
+budget: number
+engagement: "low" | "medium" | "high"
