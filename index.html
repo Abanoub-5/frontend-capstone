@@ -101,7 +101,9 @@
           engagement.
         </p>
 
-        <div id="chat-messages" class="chat-messages" aria-live="polite">
+        <div id="chat-status" class="visually-hidden" aria-live="polite"></div>
+
+        <div id="chat-messages" class="chat-messages">
           <div class="tool-empty">
             <span>💬</span>
             <p>
@@ -143,6 +145,16 @@
           </button>
         </div>
       </section>
+      <div class="empty-state">
+        <h2>What can I help you with?</h2>
+        <p>Try one of these examples:</p>
+
+        <button class="suggestion">Explain machine learning</button>
+
+        <button class="suggestion">Help me debug my code</button>
+
+        <button class="suggestion">Explain APIs simply</button>
+      </div>
     </main>
 
     <footer class="footer">
