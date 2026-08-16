@@ -22,6 +22,14 @@ export const scoreLead = tool({
       .describe("The lead's engagement level"),
   }),
 
+  outputSchema: z.object({
+    score: z.number().int().min(0).max(100),
+    category: z.enum(["Hot", "Warm", "Cold"]),
+    companySize: z.number(),
+    budget: z.number(),
+    engagement: z.enum(["low", "medium", "high"]),
+  }),
+
   execute: async ({ companySize, budget, engagement }) => {
     let score = 0;
 

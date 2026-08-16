@@ -3,21 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Settings - Profile</title>
+    <meta
+      name="description"
+      content="LeadRadar AI - manage your profile, account security, and notification preferences."
+    />
+    <meta name="theme-color" content="#2563eb" />
+    <title>Settings - LeadRadar AI</title>
     <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>"
+    />
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
     <header class="header">
       <h1>Settings</h1>
-      <nav class="nav">
-        <a href="index.html" class="nav-link">Home</a>
-        <a href="settings.html" class="nav-link active">Settings</a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="index.html" class="nav-link">Dashboard</a>
+        <a href="settings.html" class="nav-link active" aria-current="page"
+          >Settings</a
+        >
       </nav>
     </header>
 
-    <main class="main">
-      <section class="settings-section">
-        <h2>Profile Information</h2>
+    <main class="main" id="main-content">
+      <section class="settings-section" aria-labelledby="profile-heading">
+        <h2 id="profile-heading">Profile Information</h2>
         <form id="profile-form" class="profile-form" novalidate>
           <div class="form-group">
             <label for="username">Username</label>
@@ -29,13 +42,20 @@
               minlength="3"
               maxlength="20"
               pattern="[a-zA-Z0-9_]+"
+              aria-describedby="username-error"
             />
             <span class="error-message" id="username-error"></span>
           </div>
 
           <div class="form-group">
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" required />
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              aria-describedby="email-error"
+            />
             <span class="error-message" id="email-error"></span>
           </div>
 
@@ -46,14 +66,22 @@
               id="display-name"
               name="displayName"
               maxlength="50"
+              aria-describedby="display-name-error"
             />
             <span class="error-message" id="display-name-error"></span>
           </div>
 
           <div class="form-group">
             <label for="bio">Bio</label>
-            <textarea id="bio" name="bio" rows="4" maxlength="200"></textarea>
+            <textarea
+              id="bio"
+              name="bio"
+              rows="4"
+              maxlength="200"
+              aria-describedby="bio-error bio-count"
+            ></textarea>
             <span class="char-count" id="bio-count">0/200</span>
+            <span class="error-message" id="bio-error"></span>
           </div>
 
           <div class="form-group">
@@ -63,6 +91,7 @@
               id="avatar"
               name="avatar"
               placeholder="https://example.com/avatar.png"
+              aria-describedby="avatar-error"
             />
             <span class="error-message" id="avatar-error"></span>
           </div>
@@ -76,8 +105,8 @@
         </form>
       </section>
 
-      <section class="settings-section">
-        <h2>Account Settings</h2>
+      <section class="settings-section" aria-labelledby="account-heading">
+        <h2 id="account-heading">Account Settings</h2>
         <form id="account-form" class="account-form" novalidate>
           <div class="form-group">
             <label for="current-password">Current Password</label>
@@ -85,6 +114,8 @@
               type="password"
               id="current-password"
               name="currentPassword"
+              autocomplete="current-password"
+              aria-describedby="current-password-error"
             />
             <span class="error-message" id="current-password-error"></span>
           </div>
@@ -97,9 +128,11 @@
               name="newPassword"
               minlength="8"
               pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}"
+              autocomplete="new-password"
+              aria-describedby="new-password-error new-password-hint"
             />
             <span class="error-message" id="new-password-error"></span>
-            <p class="hint">
+            <p class="hint" id="new-password-hint">
               Minimum 8 characters, at least one uppercase, lowercase, and
               number
             </p>
@@ -111,6 +144,8 @@
               type="password"
               id="confirm-password"
               name="confirmPassword"
+              autocomplete="new-password"
+              aria-describedby="confirm-password-error"
             />
             <span class="error-message" id="confirm-password-error"></span>
           </div>
@@ -123,8 +158,8 @@
         </form>
       </section>
 
-      <section class="settings-section">
-        <h2>Notifications</h2>
+      <section class="settings-section" aria-labelledby="notifications-heading">
+        <h2 id="notifications-heading">Notifications</h2>
         <form id="notifications-form" class="notifications-form">
           <div class="toggle-group">
             <label class="toggle-label">
@@ -167,11 +202,11 @@
     </main>
 
     <footer class="footer">
-      <p>&copy; 2024 Frontend Capstone. Built with AI-assisted development.</p>
+      <p>&copy; 2026 LeadRadar AI. Built with AI-assisted development.</p>
     </footer>
 
-    <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
 
-    <script src="settings.js"></script>
+    <script type="module" src="settings.js"></script>
   </body>
 </html>

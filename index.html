@@ -5,18 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Frontend Capstone - AI-assisted full-stack application"
+      content="LeadRadar AI - score sales leads with AI based on company size, budget, and engagement."
     />
-    <title>Frontend Capstone</title>
+    <meta name="theme-color" content="#2563eb" />
+    <title>LeadRadar AI - AI Lead Scoring</title>
     <link rel="stylesheet" href="styles.css" />
     <link
       rel="icon"
-      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>"
     />
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
     <header class="header">
-      <h1>Frontend Capstone</h1>
+      <h1>LeadRadar AI</h1>
       <nav class="nav" aria-label="Main navigation">
         <a href="index.html" class="nav-link active" aria-current="page"
           >Dashboard</a
@@ -25,141 +28,96 @@
       </nav>
     </header>
 
-    <main class="main">
-      <section class="settings-section">
-        <h2>Welcome</h2>
-        <p style="color: var(--text-secondary); margin-bottom: 1.5rem">
-          This is the frontend capstone project demonstrating AI-assisted
-          full-stack development.
+    <main class="main" id="main-content">
+      <section class="settings-section" aria-labelledby="hero-heading">
+        <h2 id="hero-heading">Welcome</h2>
+        <p class="hero-text">
+          LeadRadar AI helps you qualify sales leads instantly. Describe a
+          lead - company size, budget, and engagement - and the AI will score
+          it as <strong>Hot</strong>, <strong>Warm</strong>, or
+          <strong>Cold</strong> so you know where to focus your sales time.
         </p>
-        <div
-          style="
-            display: grid;
-            gap: 1rem;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-          "
-        >
-          <div
-            style="
-              background: var(--bg-color);
-              padding: 1.5rem;
-              border-radius: var(--radius-md);
-              border: 1px solid var(--border-color);
-            "
-          >
-            <h3 style="margin-bottom: 0.5rem">📁 Project Structure</h3>
-            <ul
-              style="
-                list-style: none;
-                display: flex;
-                flex-direction: column;
-                gap: 0.5rem;
-                font-size: 0.875rem;
-                color: var(--text-secondary);
-              "
-            >
-              <li>index.html - Dashboard</li>
-              <li>settings.html - Settings page</li>
-              <li>styles.css - Shared styles</li>
-              <li>settings.js - Settings logic</li>
-            </ul>
-          </div>
-          <div
-            style="
-              background: var(--bg-color);
-              padding: 1.5rem;
-              border-radius: var(--radius-md);
-              border: 1px solid var(--border-color);
-            "
-          >
-            <h3 style="margin-bottom: 0.5rem">✨ Features</h3>
-            <ul
-              style="
-                list-style: none;
-                display: flex;
-                flex-direction: column;
-                gap: 0.5rem;
-                font-size: 0.875rem;
-                color: var(--text-secondary);
-              "
-            >
-              <li>Profile management with validation</li>
-              <li>Account security (password change)</li>
-              <li>Notification preferences</li>
-              <li>LocalStorage persistence</li>
-              <li>Responsive design</li>
-              <li>Accessible forms (ARIA)</li>
-            </ul>
-          </div>
-        </div>
       </section>
-      <section class="settings-section">
-        <h2>🤖 AI Lead Scoring</h2>
 
-        <p style="color: var(--text-secondary); margin-bottom: 1.5rem">
-          Ask the AI to score a sales lead using company size, budget, and
-          engagement.
+      <section class="settings-section" aria-labelledby="scoring-heading">
+        <h2 id="scoring-heading">AI Lead Scoring</h2>
+
+        <p class="section-subtitle">
+          Describe a sales lead and the AI will score it using company size,
+          budget, and engagement.
         </p>
 
         <div id="chat-status" class="visually-hidden" aria-live="polite"></div>
 
         <div id="chat-messages" class="chat-messages">
           <div class="tool-empty">
-            <span>💬</span>
+            <span>🎯</span>
             <p>
-              Try: "Score a lead with 150 employees, $15,000 budget and high
+              Try: "Score a lead with 150 employees, a $15,000 budget and high
               engagement."
             </p>
           </div>
         </div>
 
-        <form id="chat-form" class="chat-form">
-          <input
-            id="chat-input"
-            type="text"
-            placeholder="Ask me to score a lead..."
-            autocomplete="off"
-            required
-          />
+        <form id="chat-form" class="chat-form" novalidate>
+          <div class="chat-input-group">
+            <label class="visually-hidden" for="chat-input"
+              >Describe the lead to score</label
+            >
+            <input
+              id="chat-input"
+              type="text"
+              placeholder="e.g. Score a lead with 150 employees and a $15,000 budget..."
+              autocomplete="off"
+              maxlength="300"
+              required
+            />
+          </div>
 
           <button type="submit" class="btn btn-primary">Score Lead</button>
         </form>
+
+        <div class="empty-state" id="chat-empty-state">
+          <h3>What can I help you with?</h3>
+          <p>Try one of these examples:</p>
+
+          <button
+            class="suggestion"
+            data-prompt="Score a lead with 150 employees, a $15,000 budget and high engagement."
+          >
+            150 employees, $15k budget, high engagement
+          </button>
+
+          <button
+            class="suggestion"
+            data-prompt="Score a lead with 20 employees and a $2,000 budget."
+          >
+            20 employees, $2k budget
+          </button>
+
+          <button
+            class="suggestion"
+            data-prompt="Score a lead with 500 employees, a $50,000 budget and medium engagement."
+          >
+            500 employees, $50k budget, medium engagement
+          </button>
+        </div>
       </section>
+
       <section class="settings-section">
         <h2>Quick Actions</h2>
-        <div style="display: flex; gap: 1rem; flex-wrap: wrap">
-          <a
-            href="settings.html"
-            class="btn btn-primary"
-            style="text-decoration: none"
-            >Manage Settings</a
-          >
-          <button
-            class="btn btn-secondary"
-            onclick="
-              localStorage.clear();
-              location.reload();
-            "
-          >
+        <div class="quick-actions">
+          <a href="settings.html" class="btn btn-primary">Manage Settings</a>
+          <button id="clear-data" class="btn btn-secondary" type="button">
             Clear All Data
           </button>
         </div>
       </section>
-      <div class="empty-state">
-        <h2>What can I help you with?</h2>
-        <p>Try one of these examples:</p>
-
-        <button class="suggestion">Explain machine learning</button>
-
-        <button class="suggestion">Help me debug my code</button>
-
-        <button class="suggestion">Explain APIs simply</button>
-      </div>
     </main>
 
     <footer class="footer">
-      <p>&copy; 2024 Frontend Capstone. Built with AI-assisted development.</p>
+      <p>&copy; 2026 LeadRadar AI. Built with AI-assisted development.</p>
     </footer>
-    <script src="chat.js"></script>
+    <script type="module" src="chat.js"></script>
   </body>
 </html>

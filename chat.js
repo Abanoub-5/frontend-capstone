@@ -1,20 +1,43 @@
+import {
+  escapeHtml,
+  parseSSE,
+  getRemainingBuffer,
+  getErrorDetails,
+  httpError,
+} from "./src/chatUtils.js";
+
+const MAX_INPUT_LENGTH = 300;
+const API_URL = "/api/chat";
+
 let failedMessage = null;
+let failedContainer = null;
 let isRetrying = false;
+let isSending = false;
 
 const form = document.getElementById("chat-form");
 const input = document.getElementById("chat-input");
+const submitButton = form?.querySelector('button[type="submit"]');
 const messagesContainer = document.getElementById("chat-messages");
-
-const API_URL = "http://localhost:3000/api/chat";
 
 let messages = [];
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
+  if (isSending) return;
+
   const userMessage = input.value.trim();
 
-  if (!userMessage) return;
+  if (!userMessage) {
+    announceStatus("Please describe the lead you want to score.");
+    input.focus();
+    return;
+  }
+
+  if (userMessage.length > MAX_INPUT_LENGTH) {
+    showTooLongError();
+    return;
+  }
 
   addUserMessage(userMessage);
 
@@ -40,6 +63,7 @@ form.addEventListener("submit", async (event) => {
 });
 
 async function sendChatRequest(text, index, container, isRetry) {
+  setSending(true);
   showLoading(container);
 
   try {
@@ -63,7 +87,41 @@ async function sendChatRequest(text, index, container, isRetry) {
     announceStatus("");
   } catch (error) {
     handleRequestFailure(container, error, text, index, isRetry);
+  } finally {
+    setSending(false);
   }
+}
+
+function setSending(sending) {
+  isSending = sending;
+
+  if (submitButton) {
+    submitButton.disabled = sending;
+    submitButton.setAttribute("aria-busy", String(sending));
+  }
+
+  if (input) {
+    input.disabled = sending;
+  }
+}
+
+function showTooLongError() {
+  const container = createToolContainer();
+
+  container.innerHTML = `
+    <div class="chat-error" role="alert">
+      <span class="chat-error-icon" aria-hidden="true">⚠️</span>
+      <div class="chat-error-body">
+        <strong>Message too long</strong>
+        <p>
+          Please keep your message under ${MAX_INPUT_LENGTH} characters.
+        </p>
+      </div>
+    </div>
+  `;
+
+  announceStatus("Your message was too long. Please shorten it and try again.");
+  scrollToBottom();
 }
 
 function addUserMessage(text) {
@@ -144,6 +202,10 @@ function showInputStreaming(container, part) {
 }
 
 function showInputAvailable(container, input) {
+  const engagement = input.engagement != null ? escapeHtml(input.engagement) : "—";
+  const companySize =
+    input.companySize != null ? escapeHtml(String(input.companySize)) : "—";
+
   container.innerHTML = `
     <div class="tool-state tool-input">
       <div class="tool-icon">📋</div>
@@ -155,7 +217,7 @@ function showInputAvailable(container, input) {
           <div>
             <span>Company Size</span>
             <strong>
-              ${input.companySize ?? "—"} employees
+              ${companySize} employees
             </strong>
           </div>
 
@@ -173,7 +235,7 @@ function showInputAvailable(container, input) {
           <div>
             <span>Engagement</span>
             <strong>
-              ${input.engagement ?? "—"}
+              ${engagement}
             </strong>
           </div>
         </div>
@@ -185,18 +247,23 @@ function showInputAvailable(container, input) {
 }
 
 function showToolOutput(container, output) {
-  const categoryClass = output.category.toLowerCase();
+  const categoryClass = String(output.category || "").toLowerCase();
+  const engagement = escapeHtml(output.engagement ?? "—");
+  const companySize = escapeHtml(String(output.companySize ?? "—"));
+
+  const score = Number.isFinite(Number(output.score)) ? Number(output.score) : 0;
+  const category = output.category ? escapeHtml(String(output.category)) : "N/A";
 
   container.innerHTML = `
     <div class="score-card">
       <div class="score-header">
         <div>
           <span class="score-label">LEAD SCORE</span>
-          <h3>${escapeHtml(output.category)}</h3>
+          <h3>${category}</h3>
         </div>
 
         <div class="score-number">
-          ${output.score}
+          ${score}
           <small>/100</small>
         </div>
       </div>
@@ -204,14 +271,14 @@ function showToolOutput(container, output) {
       <div class="score-progress">
         <div
           class="score-progress-bar ${categoryClass}"
-          style="width: ${output.score}%"
+          style="width: ${score}%"
         ></div>
       </div>
 
       <div class="score-details">
         <div>
           <span>Company Size</span>
-          <strong>${output.companySize} employees</strong>
+          <strong>${companySize} employees</strong>
         </div>
 
         <div>
@@ -223,12 +290,13 @@ function showToolOutput(container, output) {
 
         <div>
           <span>Engagement</span>
-          <strong>${escapeHtml(output.engagement)}</strong>
+          <strong>${engagement}</strong>
         </div>
       </div>
     </div>
   `;
 
+  announceStatus(`Lead scored as ${category} with a score of ${score} out of 100.`);
   scrollToBottom();
 }
 
@@ -335,80 +403,6 @@ function renderError(container, details) {
   scrollToBottom();
 }
 
-function getErrorDetails(error) {
-  const status = error?.status;
-
-  if (status != null) {
-    if (status === 429) {
-      return {
-        title: "You're sending messages too quickly.",
-        message: "Please wait a moment and try again.",
-      };
-    }
-
-    if (status === 401) {
-      return {
-        title: "Something went wrong",
-        message:
-          "We couldn't complete that response. Check your API key in Settings and try again.",
-      };
-    }
-
-    if (status === 400) {
-      return {
-        title: "We couldn't process that request.",
-        message: "Please rephrase your message and try again.",
-      };
-    }
-
-    if (status === 404) {
-      return {
-        title: "Connection problem",
-        message:
-          "We couldn't connect to the server. It may be temporarily unavailable.",
-      };
-    }
-
-    return {
-      title: "Something went wrong",
-      message: "We couldn't complete that response. Please try again.",
-    };
-  }
-
-  if (error?.kind === "tool-output-error") {
-    return {
-      title: "Lead scoring failed",
-      message: "We couldn't calculate the lead score.",
-      detail: error.message,
-    };
-  }
-
-  if (
-    error?.kind === "network" ||
-    error instanceof TypeError ||
-    /network|fetch|load failed|failed to fetch/i.test(error?.message || "")
-  ) {
-    return {
-      title: "Connection problem",
-      message:
-        "We couldn't connect to the server. Check your connection and try again.",
-    };
-  }
-
-  return {
-    title: "Something went wrong",
-    message: "We couldn't complete that response. Please try again.",
-  };
-}
-
-function httpError(status) {
-  const error = new Error(`The AI server returned HTTP ${status}.`);
-
-  error.status = status;
-
-  return error;
-}
-
 async function readUIMessageStream(response, container) {
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
@@ -458,9 +452,6 @@ function handleStreamPart(part, container) {
   }
 
   switch (part.type) {
-    /*
-     * PLAIN TEXT STREAMING
-     */
     case "text-start":
       container._text = "";
       return;
@@ -473,31 +464,19 @@ function handleStreamPart(part, container) {
       finishText(container);
       return;
 
-    /*
-     * TOOL INPUT STREAMING
-     */
     case "tool-input-start":
     case "tool-input-delta":
       showInputStreaming(container, part);
       return;
 
-    /*
-     * TOOL INPUT AVAILABLE
-     */
     case "tool-input-available":
       showInputAvailable(container, part.input);
       return;
 
-    /*
-     * TOOL OUTPUT AVAILABLE
-     */
     case "tool-output-available":
       showToolOutput(container, part.output);
       return;
 
-    /*
-     * TOOL OUTPUT ERROR
-     */
     case "tool-output-error": {
       const toolError = new Error(
         part.errorText || "The lead scoring tool failed.",
@@ -508,9 +487,6 @@ function handleStreamPart(part, container) {
       throw toolError;
     }
 
-    /*
-     * STREAM ERROR (e.g. the AI fails after streaming has started)
-     */
     case "error": {
       const streamError = new Error(
         part.errorText || "The AI tool encountered an error.",
@@ -521,51 +497,6 @@ function handleStreamPart(part, container) {
       throw streamError;
     }
   }
-}
-
-function parseSSE(buffer) {
-  const events = [];
-
-  const chunks = buffer.split("\n\n");
-
-  for (let i = 0; i < chunks.length - 1; i++) {
-    const chunk = chunks[i];
-
-    const dataLines = chunk
-      .split("\n")
-      .filter((line) => line.startsWith("data:"));
-
-    if (!dataLines.length) {
-      continue;
-    }
-
-    const data = dataLines
-      .map((line) => line.replace(/^data:\s?/, ""))
-      .join("\n");
-
-    try {
-      events.push(JSON.parse(data));
-    } catch {
-      // Ignore incomplete/non-JSON SSE chunks.
-    }
-  }
-
-  return events;
-}
-
-function getRemainingBuffer(buffer) {
-  const chunks = buffer.split("\n\n");
-
-  return chunks[chunks.length - 1];
-}
-
-function escapeHtml(value) {
-  return String(value)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
 }
 
 function updateEmptyStates() {
@@ -607,7 +538,14 @@ function scrollToBottom() {
 
 document.querySelectorAll(".suggestion").forEach((button) => {
   button.addEventListener("click", () => {
-    input.value = button.textContent.trim();
+    input.value = button.dataset.prompt ?? button.textContent.trim();
     input.focus();
   });
+});
+
+const clearDataButton = document.getElementById("clear-data");
+
+clearDataButton?.addEventListener("click", () => {
+  localStorage.clear();
+  window.location.reload();
 });

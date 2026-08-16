@@ -49,6 +49,24 @@ body {
   overflow-x: hidden;
 }
 
+.skip-link {
+  position: absolute;
+  left: 0.75rem;
+  top: -100%;
+  z-index: 200;
+  padding: 0.625rem 1rem;
+  background: var(--primary-color);
+  color: #fff;
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  font-weight: 500;
+  transition: top 150ms ease;
+}
+
+.skip-link:focus {
+  top: 0.75rem;
+}
+
 .header {
   background: var(--card-bg);
   border-bottom: 1px solid var(--border-color);
@@ -85,6 +103,12 @@ body {
   border-bottom-color: var(--primary-color);
 }
 
+.nav-link:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 .main {
   flex: 1;
   width: 100%;
@@ -109,6 +133,22 @@ body {
   margin-bottom: 1.5rem;
   padding-bottom: 0.75rem;
   border-bottom: 1px solid var(--border-color);
+}
+
+.hero-text,
+.section-subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+.quick-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.quick-actions .btn {
+  text-decoration: none;
 }
 
 .form-group {
@@ -425,14 +465,18 @@ textarea {
   gap: 0.75rem;
 }
 
-.chat-form input {
+.chat-input-group {
   flex: 1;
   min-width: 0;
+}
+
+.chat-form input {
+  width: 100%;
   padding: 0.8rem 1rem;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
   background: var(--bg-color);
-  color: var(--text-color);
+  color: var(--text-primary);
   font-size: 1rem;
 }
 
@@ -698,12 +742,6 @@ textarea {
   display: none;
 }
 
-@keyframes pulse {
-  50% {
-    opacity: 0.5;
-  }
-}
-
 /* Streamed AI text */
 .chat-text {
   padding: 1.25rem;
@@ -781,7 +819,8 @@ textarea {
   color: var(--text-secondary);
 }
 
-.empty-state h2 {
+.empty-state h2,
+.empty-state h3 {
   font-size: 1.25rem;
   color: var(--text-primary);
   margin-bottom: 0.5rem;
